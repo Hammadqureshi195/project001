@@ -10,9 +10,6 @@ on:
   pull_request:
     branches: [ master ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -32,14 +29,15 @@ jobs:
           node-version: 12
           
       - name: Prepare for Yarn Installation
-        run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg
-      
-      - name: install yarn
-        run: sudo apt update && sudo apt install yarn
-      
+      - uses: borales/actions-yarn@v2.0.0
+        with: 
+           cmd: install   # it will be going to install yarn    
+           
       - name: Build React App
         run: yarn build
+        
       - name: Install Surge
-        run: npm install -g surge
+        run: npm install --global surge
+        
       - name: Run surge
         run: surge ./build bootcamp_hammad_reactapp.surge.sh --token ${{ secrets.SURGE_TOKEN }}
